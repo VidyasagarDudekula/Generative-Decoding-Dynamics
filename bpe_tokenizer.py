@@ -17,11 +17,11 @@ class BPETokenizer(Dataset):
         self.df = None
         self.max_seq_len = config.max_seq_len
         if config.mode == 'Train':
-            self.df = pd.read_csv(config.data_file_path, nrows=500)
+            self.df = pd.read_csv(config.data_file_path, nrows=1200)
         elif config.mode == 'Eval':
-            self.df = pd.read_csv(config.data_file_path, skiprows=500, nrows=2)
+            self.df = pd.read_csv(config.data_file_path, skiprows=range(1, 1201), nrows=2)
         elif config.mode == 'Test':
-            self.df = pd.read_csv(config.data_file_path, skiprows=1000, nrows=2)
+            self.df = pd.read_csv(config.data_file_path, skiprows=range(1, 1211), nrows=2)
         if not os.path.exists(config.tokenizer_path):
             self.tokenizer = Tokenizer(BPE(unk_token=self.unk_word))
             self.trainer = BpeTrainer(vocab_size=config.vocab_size, special_tokens=[self.unk_word, self.stop_word, self.start_word, self.pad_word, self.mask_word])
@@ -30,14 +30,17 @@ class BPETokenizer(Dataset):
             self.tokenizer.train_from_iterator(self.df['Text'], self.trainer)
             self.tokenizer.save(config.tokenizer_path)
         else:
+            print("Data Chunking Begun....")
             self.tokenizer = Tokenizer.from_file(config.tokenizer_path)
             total_seq_data = []
+            print(type(self.df), self.df.columns)
             for line in self.df['Text']:
                 line_tokens = self.tokenizer.encode(line).ids
                 for i in range(0, len(line_tokens)-self.max_seq_len-1, self.max_seq_len):
                     total_seq_data.append(line_tokens[i:self.max_seq_len+i+1]) # len of each sample as config.max_seq_len + 1
             self.df = total_seq_data[:]
             del total_seq_data
+            print("Data Chunking Done")
         self.vocab_size = self.tokenizer.get_vocab_size(with_added_tokens=True)
         self.start_token = self.tokenizer.token_to_id(self.start_word)
         self.stop_token = self.tokenizer.token_to_id(self.stop_word)

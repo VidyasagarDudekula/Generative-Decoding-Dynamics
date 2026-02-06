@@ -4,6 +4,10 @@ import re
 import csv
 import time
 import os
+from config import ModelArgs
+
+
+config = ModelArgs()
 
 
 def strip_gutenberg_headers(text):
@@ -52,7 +56,7 @@ def clean_text_regex(text):
 
 
 input_csv = 'gutenberg_metadata.csv'
-output_csv = 'gutenberg_data_modified.csv'
+output_csv = config.data_file_path
 
 
 if not os.path.exists(input_csv):

@@ -1,0 +1,16 @@
+nohup: ignoring input
+Data Chunking Begun....
+<class 'pandas.core.frame.DataFrame'> Index(['Title', 'Author', 'Link', 'ID', 'Bookshelf', 'Text'], dtype='object')
+Data Chunking Done
+Training Data loaded
+Data Chunking Begun....
+<class 'pandas.core.frame.DataFrame'> Index(['Title', 'Author', 'Link', 'ID', 'Bookshelf', 'Text'], dtype='object')
+Data Chunking Done
+Eval Data loaded
+x: torch.Size([32, 1024]) torch.int64
+y: torch.Size([32, 1024]) torch.int64
+mask: torch.Size([32, 1024]) torch.bool
+Total Parameters:- 158754048
+--> No checkpoint found. Starting from scratch.
+From Epoch:- 0, step:-0
+Epoch: 0, step:- 0, Loss:- 10.374654769897461, eval_loss:- 10.373386859893799
